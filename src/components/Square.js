@@ -8,18 +8,19 @@ const Div = styled.div`
   margin: 1px;
 `
 
-
-function Square({ cell }) {
+function Square({ cell, game }) {
 
     useEffect(() => {
         setStatus(cell.alive)
     }, [cell.alive])
 
     const switchStatus = () => {
-        cell.switchStatus()
-        setStatus(cell.alive)
-        // cell.checkNeighbors()
-        console.log(cell)
+        if (!game) {
+            cell.switchStatus()
+            setStatus(cell.alive)
+            // cell.checkNeighbors()
+            console.log(cell)
+        }
     }
     const [ status, setStatus ] = useState(cell.alive)
     return (

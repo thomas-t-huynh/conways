@@ -33,6 +33,7 @@ function App() {
   const [table, setTable] = useState(initTable.table)
   const [gen, setGen] = useState(0)
   const [game, setGame] = useState(false)
+  const [speed, setSpeed] = useState(100)
   // console.log(table)
 
   const setNextGen = () => {
@@ -44,13 +45,18 @@ function App() {
     initTable.checkCellsNeighbors()
   }
 
+  const selectPresetCells = () => {
+    const mid_y = ~~(table.length /2)
+    const mid_x = ~~(table[0].length /2)
+  }
+
   useEffect(() => {
     if (game) {
       checkNeighbors()
       const setNextGenInterval = setInterval(() => {
         setNextGen()
         setGen(gen + 1)
-      }, 500)
+      }, speed)
       return function cleanup() {
         clearInterval(setNextGenInterval) 
       }
@@ -59,10 +65,10 @@ function App() {
 
   return (
     <div className="App">
-      {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} cell={cell} />)}</Row>)}
-      <button onClick={() => setNextGen()}>Next gen</button>
-      <button onClick={() => checkNeighbors()}>Check Neighbors</button>
+      {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} />)}</Row>)}
+      <h3>Generation: {gen}</h3>
       <button onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</button>
+      <input onChange={e => setSpeed(500/e.target.value)} value={500/speed} type="number" min="1" max="5"/>
     </div>
   );
 }
