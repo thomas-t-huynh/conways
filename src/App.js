@@ -48,6 +48,7 @@ function App() {
   const selectPresetCells = () => {
     const mid_y = ~~(table.length /2)
     const mid_x = ~~(table[0].length /2)
+    // commit
   }
 
   useEffect(() => {
