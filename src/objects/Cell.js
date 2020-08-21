@@ -15,6 +15,14 @@ export default class Cell {
         this.alive = this.nextStatus
     }
 
+    setAlive() {
+        this.alive = true
+    }
+
+    setDead() {
+        this.alive = false
+    }
+
     checkNeighbors() {
         const { table: { table }, x, y } = this
         let n = 0, ne = 0, nw = 0, s = 0, se = 0, sw = 0

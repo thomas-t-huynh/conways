@@ -34,8 +34,8 @@ function App() {
   const [gen, setGen] = useState(0)
   const [game, setGame] = useState(false)
   const [speed, setSpeed] = useState(100)
+  const [rainbow, setRainbow] = useState('mediumseagreen')
   // console.log(table)
-
   const setNextGen = () => {
     initTable.switchCellsStatus()
     setTable([...initTable.table])
@@ -45,10 +45,21 @@ function App() {
     initTable.checkCellsNeighbors()
   }
 
-  const selectPresetCells = () => {
+  const selectPresetCells = (preset) => {
+    if (game) {return}
+    initTable.setAllDead()
     const mid_y = ~~(table.length /2)
     const mid_x = ~~(table[0].length /2)
+    initTable[`create${preset}`]({mid_x, mid_y})
+    setTable([...initTable.table])
     // commit
+  }
+
+  const handleSetRainbow = () => {
+    if (rainbow === 'mediumseagreen') {
+      return setRainbow('rainbow')
+    } 
+    setRainbow('mediumseagreen')
   }
 
   useEffect(() => {
@@ -66,10 +77,17 @@ function App() {
 
   return (
     <div className="App">
-      {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} />)}</Row>)}
+      {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} color={rainbow} />)}</Row>)}
       <h3>Generation: {gen}</h3>
       <button onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</button>
+      <button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</button>
+      <button onClick={() => selectPresetCells('Blinker')}>Blinker</button>
+      <button onClick={() => selectPresetCells('Toad')}>Toad</button>
+      <button onClick={() => selectPresetCells('Beacon')}>Beacon</button>
+      <button onClick={() => selectPresetCells('Glider')}>Glider</button>
+      <button onClick={() => selectPresetCells('Random')}>Random</button>
       <input onChange={e => setSpeed(500/e.target.value)} value={500/speed} type="number" min="1" max="5"/>
+
     </div>
   );
 }
