@@ -37,7 +37,7 @@ export default class Table {
         this.table.forEach(row => {
             row.forEach(cell => {
                 const randInt = Math.floor(Math.random() * 10);
-                if (randInt <= 3) {
+                if (randInt <= 2) {
                     cell.setAlive()
                 }
             })
@@ -45,14 +45,13 @@ export default class Table {
     }
 
     changeCells(amount) {
-        console.log(amount)
         const table = []
         for (var y = 0; y < amount; y++) {
             if (this.table[y]) {
-                const row = table[y]
+                const row = []
                 for (var x = 0; x < amount; x++) {
                     if (!this.table[y][x]) {
-                        const cell = new Cell(false, this.table, x, y)
+                        const cell = new Cell(false, this, x, y)
                         row.push(cell)
                     } else {
                         row.push(this.table[y][x])
@@ -62,13 +61,13 @@ export default class Table {
             } else {
                 const row = []
                 for (var x = 0; x < amount; x++) {
-                    const cell = new Cell(false, this.table, x, y)
+                    const cell = new Cell(false, this, x, y)
                     row.push(cell)
                 }
                 table.push(row)
             }
         }
-        this.table = table
+        this.setTable(table)
     }
 
     createBlinker({mid_x, mid_y}) {

@@ -64,7 +64,7 @@ function App() {
     setRainbow('mediumseagreen')
   }
 
-  const handleSetCells = cells => {
+  const handleSetCells = () => {
     if (cells < 25) {
       setMessage("Minimum cells is 25")
       return setCells(25)
