@@ -1,3 +1,5 @@
+import Cell from './Cell'
+
 export default class Table {
     constructor(table=[]) {
         this.table = table
@@ -40,6 +42,33 @@ export default class Table {
                 }
             })
         })
+    }
+
+    changeCells(amount) {
+        console.log(amount)
+        const table = []
+        for (var y = 0; y < amount; y++) {
+            if (this.table[y]) {
+                const row = table[y]
+                for (var x = 0; x < amount; x++) {
+                    if (!this.table[y][x]) {
+                        const cell = new Cell(false, this.table, x, y)
+                        row.push(cell)
+                    } else {
+                        row.push(this.table[y][x])
+                    }
+                }
+                table.push(row)
+            } else {
+                const row = []
+                for (var x = 0; x < amount; x++) {
+                    const cell = new Cell(false, this.table, x, y)
+                    row.push(cell)
+                }
+                table.push(row)
+            }
+        }
+        this.table = table
     }
 
     createBlinker({mid_x, mid_y}) {

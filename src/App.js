@@ -11,12 +11,12 @@ import './App.css';
 const Row = styled.div`
   display: flex;
 `
-const generateTable = (height, width) => {
+const generateTable = (amount) => {
   const table = new Table()
   const arr = []
-  for (var y = 0; y < height; y++) {
+  for (var y = 0; y < amount; y++) {
     const row = []
-    for (var x = 0; x < width; x++) {
+    for (var x = 0; x < amount; x++) {
       const cell = new Cell(false, table, x, y)
       row.push(cell)
     }
@@ -26,7 +26,7 @@ const generateTable = (height, width) => {
   return table
 }
 
-const initTable = generateTable(25, 25)
+const initTable = generateTable(25)
 
 function App() {
 
@@ -35,6 +35,8 @@ function App() {
   const [game, setGame] = useState(false)
   const [speed, setSpeed] = useState(100)
   const [rainbow, setRainbow] = useState('mediumseagreen')
+  const [cells, setCells] = useState(25)
+  const[message, setMessage] = useState("")
   // console.log(table)
   const setNextGen = () => {
     initTable.switchCellsStatus()
@@ -62,6 +64,20 @@ function App() {
     setRainbow('mediumseagreen')
   }
 
+  const handleSetCells = cells => {
+    if (cells < 25) {
+      setMessage("Minimum cells is 25")
+      return setCells(25)
+    } else if (cells > 100) {
+      setMessage("Maximum cells is 100")
+      return setCells(100)
+    } else {
+      setMessage("")
+      initTable.changeCells(cells)
+      setTable([...initTable.table])
+    }
+  }
+
   useEffect(() => {
     if (game) {
       checkNeighbors()
@@ -79,6 +95,7 @@ function App() {
     <div className="App">
       {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} color={rainbow} />)}</Row>)}
       <h3>Generation: {gen}</h3>
+      <h3>{message}</h3>
       <button onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</button>
       <button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</button>
       <button onClick={() => selectPresetCells('Blinker')}>Blinker</button>
@@ -87,7 +104,8 @@ function App() {
       <button onClick={() => selectPresetCells('Glider')}>Glider</button>
       <button onClick={() => selectPresetCells('Random')}>Random</button>
       <input onChange={e => setSpeed(500/e.target.value)} value={500/speed} type="number" min="1" max="5"/>
-
+      <input onChange={e => setCells(e.target.value)} value={cells} type="number" min="25" max="100"/>
+      <button onClick={() => handleSetCells()}>Set cells</button>
     </div>
   );
 }
