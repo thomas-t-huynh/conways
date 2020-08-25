@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
+import { InputNumber } from 'antd';
+import { Alert } from 'antd';
 
 import Table from './objects/Table'
 import Cell from './objects/Cell'
@@ -16,18 +18,35 @@ const Row = styled.div`
 const Container = styled.div`
   margin: 0 auto;
   display: flex;
-  width: 800px;
-  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
 `
 
 const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
 `
 
 const CellContainer = styled.div`
   
 `
+
+const Title = styled.h1`
+  font-family: 'Do Hyeon', sans-serif;
+  color: white;
+  font-size: 40px;
+  text-shadow: 2px 2px black;
+`
+
+const Label = styled.h3`
+  font-family: 'Do Hyeon', sans-serif;
+  text-shadow: .5px .5px black;
+  color: white;
+  padding: 5px 0;
+`
+
 const generateTable = (amount) => {
   const table = new Table()
   const arr = []
@@ -85,9 +104,9 @@ function App() {
     if (cells < 25) {
       setMessage("Minimum cells is 25")
       return setCells(25)
-    } else if (cells > 100) {
-      setMessage("Maximum cells is 100")
-      return setCells(100)
+    } else if (cells > 50) {
+      setMessage("Maximum cells is 50")
+      return setCells(50)
     } else {
       setMessage("")
       initTable.changeCells(cells)
@@ -110,23 +129,26 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Conway's Game of Life</h1>
+      <Title>Conway's Game of Life</Title>
       <Container>
         <CellContainer>
           {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} color={rainbow} />)}</Row>)}
         </CellContainer>
         <MenuContainer>
-          <h3>Generation: {gen}</h3>
-          <h3>{message}</h3>
+          <Label>Generation: {gen}</Label>
+          {message && <Alert message={message} type="error" />}
           <Button type={game ? 'danger' : 'primary'} onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</Button>
+          <Label>Preset Patterns</Label>
           <Button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</Button>
           <Button onClick={() => selectPresetCells('Blinker')}>Blinker</Button>
           <Button onClick={() => selectPresetCells('Toad')}>Toad</Button>
           <Button onClick={() => selectPresetCells('Beacon')}>Beacon</Button>
           <Button onClick={() => selectPresetCells('Glider')}>Glider</Button>
           <Button onClick={() => selectPresetCells('Random')}>Random</Button>
-          <input onChange={e => setSpeed(500/e.target.value)} value={500/speed} type="number" min="1" max="5"/>
-          <input onChange={e => setCells(e.target.value)} value={cells} type="number" min="25" max="100"/>
+          <Label>Set Game Speed</Label>
+          <InputNumber style={{ width: '100%' }} onChange={e => setSpeed(500/e)} value={500/speed} type="number" min="1" max="5"/>
+          <Label>Set Cell Amount</Label>
+          <InputNumber style={{ width: '100%', marginBottom: 10}} onKeyDown={e => e.keyCode === 13 && handleSetCells()}onChange={e => setCells(e)} value={cells} type="number" min="25" max="100"/>
           <Button onClick={() => handleSetCells()}>Set cells</Button>
         </MenuContainer>
       </Container>
