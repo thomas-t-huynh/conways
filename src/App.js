@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Button } from 'antd';
 
 import Table from './objects/Table'
 import Cell from './objects/Cell'
@@ -10,6 +11,22 @@ import './App.css';
 
 const Row = styled.div`
   display: flex;
+`
+
+const Container = styled.div`
+  margin: 0 auto;
+  display: flex;
+  width: 800px;
+  justify-content: space-between;
+`
+
+const MenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const CellContainer = styled.div`
+  
 `
 const generateTable = (amount) => {
   const table = new Table()
@@ -93,19 +110,26 @@ function App() {
 
   return (
     <div className="App">
-      {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} color={rainbow} />)}</Row>)}
-      <h3>Generation: {gen}</h3>
-      <h3>{message}</h3>
-      <button onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</button>
-      <button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</button>
-      <button onClick={() => selectPresetCells('Blinker')}>Blinker</button>
-      <button onClick={() => selectPresetCells('Toad')}>Toad</button>
-      <button onClick={() => selectPresetCells('Beacon')}>Beacon</button>
-      <button onClick={() => selectPresetCells('Glider')}>Glider</button>
-      <button onClick={() => selectPresetCells('Random')}>Random</button>
-      <input onChange={e => setSpeed(500/e.target.value)} value={500/speed} type="number" min="1" max="5"/>
-      <input onChange={e => setCells(e.target.value)} value={cells} type="number" min="25" max="100"/>
-      <button onClick={() => handleSetCells()}>Set cells</button>
+      <h1>Conway's Game of Life</h1>
+      <Container>
+        <CellContainer>
+          {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} color={rainbow} />)}</Row>)}
+        </CellContainer>
+        <MenuContainer>
+          <h3>Generation: {gen}</h3>
+          <h3>{message}</h3>
+          <Button type={game ? 'danger' : 'primary'} onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</Button>
+          <Button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</Button>
+          <Button onClick={() => selectPresetCells('Blinker')}>Blinker</Button>
+          <Button onClick={() => selectPresetCells('Toad')}>Toad</Button>
+          <Button onClick={() => selectPresetCells('Beacon')}>Beacon</Button>
+          <Button onClick={() => selectPresetCells('Glider')}>Glider</Button>
+          <Button onClick={() => selectPresetCells('Random')}>Random</Button>
+          <input onChange={e => setSpeed(500/e.target.value)} value={500/speed} type="number" min="1" max="5"/>
+          <input onChange={e => setCells(e.target.value)} value={cells} type="number" min="25" max="100"/>
+          <Button onClick={() => handleSetCells()}>Set cells</Button>
+        </MenuContainer>
+      </Container>
     </div>
   );
 }
