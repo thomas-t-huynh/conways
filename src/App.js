@@ -8,6 +8,7 @@ import Table from './objects/Table'
 import Cell from './objects/Cell'
 
 import Square from './components/Square'
+import AboutModal from './components/Modal'
 
 import './App.css';
 
@@ -30,7 +31,13 @@ const MenuContainer = styled.div`
 `
 
 const CellContainer = styled.div`
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  button {
+    margin-top: 10px;
+    width: 150px;
+  }
 `
 
 const Title = styled.h1`
@@ -72,7 +79,8 @@ function App() {
   const [speed, setSpeed] = useState(100)
   const [rainbow, setRainbow] = useState('mediumseagreen')
   const [cells, setCells] = useState(25)
-  const[message, setMessage] = useState("")
+  const [message, setMessage] = useState("")
+  const [modal, setModal] = useState(false)
   // console.log(table)
   const setNextGen = () => {
     initTable.switchCellsStatus()
@@ -114,6 +122,13 @@ function App() {
     }
   }
 
+  const resetGame = () => {
+    initTable.setAllDead()
+    setGen(0)
+    setGame(!game)
+    setTable([...initTable.table])
+  }
+
   useEffect(() => {
     if (game) {
       checkNeighbors()
@@ -133,24 +148,28 @@ function App() {
       <Container>
         <CellContainer>
           {table.map((row, i) => <Row key={i}>{row.map((cell, i) => <Square key={i} game={game} cell={cell} color={rainbow} />)}</Row>)}
+          <Button onClick={() => setModal(true)}>About Conway's</Button>
         </CellContainer>
         <MenuContainer>
           <Label>Generation: {gen}</Label>
           {message && <Alert message={message} type="error" />}
           <Button type={game ? 'danger' : 'primary'} onClick={() => setGame(!game)}>{game ? 'Stop game' : 'Start Game'}</Button>
+          <Button onClick={(() => resetGame())}>Reset Game</Button>
           <Label>Preset Patterns</Label>
-          <Button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</Button>
           <Button onClick={() => selectPresetCells('Blinker')}>Blinker</Button>
           <Button onClick={() => selectPresetCells('Toad')}>Toad</Button>
           <Button onClick={() => selectPresetCells('Beacon')}>Beacon</Button>
           <Button onClick={() => selectPresetCells('Glider')}>Glider</Button>
           <Button onClick={() => selectPresetCells('Random')}>Random</Button>
+          <Label>Toggle color</Label>
+          <Button onClick={() => handleSetRainbow()}>{rainbow === 'rainbow' ? 'Single Color' : 'Rainbow'}</Button>
           <Label>Set Game Speed</Label>
           <InputNumber style={{ width: '100%' }} onChange={e => setSpeed(500/e)} value={500/speed} type="number" min="1" max="5"/>
           <Label>Set Cell Amount</Label>
           <InputNumber style={{ width: '100%', marginBottom: 10}} onKeyDown={e => e.keyCode === 13 && handleSetCells()}onChange={e => setCells(e)} value={cells} type="number" min="25" max="100"/>
           <Button onClick={() => handleSetCells()}>Set cells</Button>
         </MenuContainer>
+        <AboutModal modal={modal} setModal={setModal} />
       </Container>
     </div>
   );
