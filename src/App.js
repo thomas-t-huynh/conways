@@ -125,7 +125,7 @@ function App() {
   const resetGame = () => {
     initTable.setAllDead()
     setGen(0)
-    setGame(!game)
+    setGame(false)
     setTable([...initTable.table])
   }
 
